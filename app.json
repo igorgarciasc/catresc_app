@@ -1,0 +1,31 @@
+{
+	"expo": {
+		"name": "AppCatre",
+		"slug": "appcatre",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/icon.png",
+		"splash": {
+			"image": "./assets/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"updates": {
+			"fallbackToCacheTimeout": 0
+		},
+		"android": {
+			"useNextNotificationsApi": true,
+			"package": "com.figapp.appcatre",
+			"config":{
+				"googleMaps":{
+					"apiKey": "AIzaSyBc0GdQ9eapeRg416NSKAyZIPTAiVbvMBU"
+				}
+			}
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"supportsTablet": true,
+			"bundleIdentifier": "com.figapp.appcatre"
+		}
+	}
+}
