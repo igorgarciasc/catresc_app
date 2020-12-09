@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Block, Text } from "galio-framework";
+import { Block, Text, Button } from "galio-framework";
 import { Image, Alert } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from "react-native-maps";
 
@@ -94,7 +94,6 @@ function Mapa() {
 
 				</MapView>
 			</Block>
-
 		</Block>
 	);
 }

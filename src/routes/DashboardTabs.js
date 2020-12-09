@@ -7,6 +7,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import Programacao from "../pages/Programacao";
 import Mapa from "../pages/Mapa";
 import Experiencia from "../pages/Experiencia";
+import ExperienciaTabs from "../routes/ExperienciaTabs"
 import Servicos from "../pages/Servicos";
 
 import { connect } from "react-redux";
@@ -91,6 +92,7 @@ function DashboardTabs({ token }) {
 					name="Experiência"
 					options={{
 						tabBarLabel: '',
+						unmountOnBlur: true,
 						tabBarIcon: ({ color, size, focused }) => {
 							return (
 								<FontAwesome5
@@ -101,7 +103,7 @@ function DashboardTabs({ token }) {
 							);
 						},
 					}}
-					component={Experiencia}
+					component={ExperienciaTabs}
 				/>
 			)}
 

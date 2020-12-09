@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, RefreshControl } from "react-native";
+import { ScrollView, RefreshControl, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Block, theme } from "galio-framework";
+import { Block, theme, Text } from "galio-framework";
 
 import api from "../../services/api";
 
@@ -21,7 +21,6 @@ function Programacao({ navigation, room, emptyToken }) {
 
 	function load() {
 		setRefreshing(true)
-
 		api
 			.get(`programacao?app=true&limit=${room.chkt}`)
 			.then((result) => {
@@ -50,11 +49,20 @@ function Programacao({ navigation, room, emptyToken }) {
 	}
 
 	useEffect(() => {
+		console.log(room)
 		const dateCheckout = new Date(room.chkt);
 		if ((!room.number) || (dateCheckout <= Date.now()))
 		{
+			Alert.alert(
+				'Ops',
+				'Parece que você não está mais hospedado.',
+				[
+					{
+						text: "OK"
+					}
+				]
+			);
 			emptyToken();
-			navigation.navigate("Onboarding");
 		}
 		load()
 	}, []);
@@ -62,6 +70,19 @@ function Programacao({ navigation, room, emptyToken }) {
 	const onRefresh = React.useCallback(() => {
 		load()
 	}, []);
+
+	let body;
+	if (programas.length > 0)
+	{
+		body = programas.map(pro => <Card key={pro.id} item={pro} horizontal />)
+	} else
+	{
+		body = (
+			<Text style={{ fontFamily: 'montserrat-regular', marginTop: 30 }} center muted>
+				Em breve publicaremos nossa {"\n"} programação :)
+			</Text>
+		)
+	}
 
 	return (
 		<Block flex style={{ flexDirection: 'column' }}>
@@ -84,11 +105,7 @@ function Programacao({ navigation, room, emptyToken }) {
 				}}
 				/>}>
 					<Block style={styles.container}>
-
-						{
-							programas.map(pro => <Card key={pro.id} item={pro} horizontal />)
-						}
-
+						{body}
 					</Block>
 				</ScrollView>
 			</Block>

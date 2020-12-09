@@ -8,12 +8,13 @@ import { connect } from "react-redux";
 
 import api from '../../services/api'
 
-function ExperienciaModal({ show, setShow, expirence, room, token }) {
+function ExperienciaModal({ show, setShow, expirence, room, token, onSuccess }) {
 
     const [disponibilidade, setDisponibilidade] = useState([])
     const [selectedDay, setSelectedDay] = useState(false);
     const [selectedHour, setSelectedHour] = useState(false);
-    const [spinner, setSpinner] = useState(false)
+    const [spinner, setSpinner] = useState(false);
+    const [horariosDisponiveis, setHorariosDisponiveis] = useState(false)
 
     function handleClickAgendamento() {
         Alert.alert(
@@ -42,7 +43,9 @@ function ExperienciaModal({ show, setShow, expirence, room, token }) {
                                         onPress: () => {
                                             setSelectedHour(false)
                                             setSelectedDay(false)
+                                            setHorariosDisponiveis(false)
                                             setShow(!show)
+                                            onSuccess()
                                         }
                                     }
                                 ]
@@ -66,12 +69,18 @@ function ExperienciaModal({ show, setShow, expirence, room, token }) {
     function closeModal() {
         setSelectedDay(false)
         setSelectedHour(false)
+        setHorariosDisponiveis(false)
         setShow(!show)
     }
 
     function handleClickSelectDay(day) {
         setSelectedDay(day)
         setSelectedHour(false)
+        setHorariosDisponiveis(false)
+        if (day.horarios.length > 0)
+        {
+            setHorariosDisponiveis(true)
+        }
     }
 
     return (
@@ -124,7 +133,7 @@ function ExperienciaModal({ show, setShow, expirence, room, token }) {
                     </View>
 
                     {
-                        selectedDay && (
+                        horariosDisponiveis && (
                             <View style={{
                                 backgroundColor: '#fff',
                                 flexDirection: 'column',

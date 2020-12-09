@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, RefreshControl, Alert } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { Block } from "galio-framework";
 import Header from '../../components/Header'
 import styles from './styles'
@@ -18,8 +17,8 @@ function Experiencia({ navigate, room }) {
 	const [showModal, setShowModal] = useState(false);
 	const [selectedExperience, setSelectedExperience] = useState({})
 
-	function load() {
-		setRefreshing(true)
+	function load(setRefreshingValue = true) {
+		setRefreshing(setRefreshingValue)
 		api
 			.get(`experiencia?limit=${room.chkt}`)
 			.then((result) => {
@@ -41,7 +40,7 @@ function Experiencia({ navigate, room }) {
 	}
 
 	useEffect(() => {
-		load()
+		load(false)
 	}, []);
 
 	const onRefresh = React.useCallback(() => {
@@ -60,7 +59,7 @@ function Experiencia({ navigate, room }) {
 					<Header
 						title="EXPERIÊNCIA"
 						logout={true}
-						navigation={useNavigation}
+						navigation={navigate}
 						bgColor="#F4AE00"
 						titleColor="white"
 						iconColor="white"
@@ -82,6 +81,7 @@ function Experiencia({ navigate, room }) {
 				setShow={setShowModal}
 				expirence={selectedExperience}
 				room={room}
+				onSuccess={() => load(false)}
 			/>
 		</>
 	);
