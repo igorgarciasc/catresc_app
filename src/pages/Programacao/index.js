@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, RefreshControl, Alert } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { Block, theme, Text } from "galio-framework";
+import { useFocusEffect } from '@react-navigation/native'
 
 import api from "../../services/api";
 
@@ -14,15 +14,16 @@ import * as TokenActions from "../../storage/actions/token";
 
 import styles from './styles.js'
 
-function Programacao({ navigation, room, emptyToken }) {
+import { registerForPushNotifications } from '../../services/pushNotifications'
+
+function Programacao({ navigation, room, token }) {
 
 	const [programas, setProgramas] = useState([]);
 	const [refreshing, setRefreshing] = React.useState(false);
 
 	function load() {
 		setRefreshing(true)
-		api
-			.get(`programacao?app=true&limit=${room.chkt}`)
+		api.get(`app/programacao?app=true&limit=${room.chkt}`)
 			.then((result) => {
 				let progs = [];
 				result.data.data.forEach(d => {
@@ -45,26 +46,11 @@ function Programacao({ navigation, room, emptyToken }) {
 					]
 				);
 			});
-
 	}
 
 	useEffect(() => {
-		console.log(room)
-		const dateCheckout = new Date(room.chkt);
-		if ((!room.number) || (dateCheckout <= Date.now()))
-		{
-			Alert.alert(
-				'Ops',
-				'Parece que você não está mais hospedado.',
-				[
-					{
-						text: "OK"
-					}
-				]
-			);
-			emptyToken();
-		}
-		load()
+		load();
+		registerForPushNotifications(room);
 	}, []);
 
 	const onRefresh = React.useCallback(() => {
@@ -90,14 +76,13 @@ function Programacao({ navigation, room, emptyToken }) {
 				<Header
 					title="PROGRAMAÇÃO"
 					logout={true}
-					navigation={useNavigation}
+					navigation={navigation}
 					bgColor="#F4AE00"
 					titleColor="white"
 					iconColor="white"
 					white={true}
 				/>
 			</Block>
-
 			<Block flex>
 				<ScrollView showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} contentContainerStyle={{
 					paddingHorizontal: 16,
@@ -109,7 +94,6 @@ function Programacao({ navigation, room, emptyToken }) {
 					</Block>
 				</ScrollView>
 			</Block>
-
 		</Block>
 	);
 }

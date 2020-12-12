@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Alert, Vibration, Text } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, Alert, Vibration } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import BarcodeMask from 'react-native-barcode-mask';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { Block, Button } from "galio-framework";
+import { Block, Button, Text } from "galio-framework";
 
 import { Camera } from 'expo-camera';
 
@@ -17,43 +16,46 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as TokenActions from "../../storage/actions/token";
 import * as RoomActions from '../../storage/actions/room'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function Pulseira({ token, setToken, setRoom }) {
+import Modal from './modal'
+
+function Pulseira({ navigation, token, room, setToken, setRoom }) {
 
 	const [hasPermission, setHasPermission] = useState(null);
 	const [scanned, setScanned] = useState(false)
 	const [spinner, setSpinner] = useState(false);
-	const { navigate } = useNavigation();
+	const [showModal, setShowModal] = useState(false)
 
-	useFocusEffect(() => {
-		if (token.value)
-		{
-			navigate('DashboardTabs')
-		}
+	useEffect(() => {
+		if (!!token.value && !!room.number) navigation.navigate('DashboardTabs');
 		(async () => {
 			const { status } = await BarCodeScanner.requestPermissionsAsync();
 			setHasPermission(status === "granted");
 			setSpinner(false);
 		})();
-	});
+	}, []);
 
 	const handleBarCodeScanned = ({ type, data }) => {
-		setSpinner(true);
-		setScanned(true);
+		setShowModal(false);
 
-		if (!data)
-		{
-			navigate('Digitar')
-		}
-
-		api.post('app/register', { cod: data }).then(result => {
+		api.post('app/register', { cod: data }).then(async (result) => {
+			const informacoesUsuario = result.data.data;
 			setSpinner(false);
-			if (result.data.data.status)
+			if (!!informacoesUsuario.status)
 			{
-				Vibration.vibrate();
-				setToken(result.data.data.token);
-				setRoom(result.data.data.room, result.data.data.chkt)
-				navigation.navigate('DashboardTabs');
+				try
+				{
+					Vibration.vibrate(200);
+					setToken(informacoesUsuario.token);
+					await AsyncStorage.setItem('@appcatreToken', informacoesUsuario.token);
+					setRoom(informacoesUsuario.room, informacoesUsuario.chkt)
+					await AsyncStorage.setItem('@appcatreRoom', JSON.stringify({ number: informacoesUsuario.room, chkt: informacoesUsuario.chkt }));
+					navigation.navigate('DashboardTabs');
+				} catch (err)
+				{
+					console.log(err)
+				}
 			}
 			else
 			{
@@ -81,30 +83,29 @@ function Pulseira({ token, setToken, setRoom }) {
 		});
 	};
 
-	const handleDigitar = () => {
-		navigate('Digitar')
-	}
-
 	if (hasPermission === null)
 	{
 		return (<>
 			<Header
 				title="IDENTIFICAÇÃO"
-				navigation={useNavigation}
+				navigation={navigation}
 				bgColor="#F4AE00"
 				logout={false}
 				titleColor="white"
 				iconColor="white"
 				white={true}
-
 			/>
-			<Text>Solicitando a permissão</Text>
-
+			<Text style={{ fontFamily: 'montserrat-regular', marginTop: 30 }} center muted>
+				Estamos aguardando sua permissão :)
+			</Text>
+			<Block center style={{ marginTop: 550 }} >
+				<Button color="#F4AE00" shadowless size='large' onPress={() => setShowModal(!showModal)}>Prefiro Digitar</Button>
+			</Block>
 		</>)
 	}
 	else if (hasPermission === false)
 	{
-		navigate('Digitar')
+		navigation.navigate('Digitar')
 	}
 	else
 	{
@@ -117,7 +118,7 @@ function Pulseira({ token, setToken, setRoom }) {
 				/>
 				<Header
 					title="IDENTIFICAÇÃO"
-					navigation={useNavigation}
+					navigation={navigation}
 					bgColor="#F4AE00"
 					logout={false}
 					titleColor="white"
@@ -131,10 +132,10 @@ function Pulseira({ token, setToken, setRoom }) {
 						<BarcodeMask width={350} height={100} edgeColor={nowTheme.COLORS.DEFAULT} showAnimatedLine={false} />
 					</Camera >}
 					<Block center style={{ marginTop: 550 }} >
-						<Button color="#F4AE00" shadowless size='large' onPress={handleDigitar}>Prefiro Digitar</Button>
+						<Button color="#F4AE00" shadowless size='large' onPress={() => setShowModal(!showModal)}>Prefiro Digitar</Button>
 					</Block>
 				</View >
-
+				<Modal show={showModal} setShow={setShowModal} onProcess={handleBarCodeScanned} />
 			</>
 		);
 	}

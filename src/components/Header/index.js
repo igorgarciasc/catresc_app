@@ -9,13 +9,21 @@ import nowTheme from '../../constants/Theme';
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as TokenActions from "../../storage/actions/token";
+import * as RoomActions from "../../storage/actions/room"
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { handlerLogout } from '../../services/register'
 
 const { height, width } = Dimensions.get('window');
 
 const iPhoneX = () =>
   Platform.OS === 'ios' && (height === 812 || width === 812 || height === 896 || width === 896);
 
-function Header({ title, transparent, bgColor, titleColor, logout, emptyToken }) {
+
+import store from '../../storage'
+
+
+function Header({ title, transparent, bgColor, titleColor, logout, emptyToken, emptyRoom }) {
 
   const noShadow = ['Search', 'Categories', 'Deals', 'Pro', 'Profile'].includes(title);
   const headerStyles = [
@@ -26,8 +34,8 @@ function Header({ title, transparent, bgColor, titleColor, logout, emptyToken })
   const navbarStyles = [styles.navbar, bgColor && { backgroundColor: bgColor }];
   const { navigate } = useNavigation();
 
-  function handleLogout() {
-    emptyToken()
+  async function handleLogout() {
+    await handlerLogout()
     navigate("Onboarding");
   }
 
@@ -137,6 +145,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(Object.assign(TokenActions), dispatch);
+  bindActionCreators(Object.assign(TokenActions, RoomActions), dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

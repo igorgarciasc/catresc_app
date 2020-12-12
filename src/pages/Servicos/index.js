@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, RefreshControl, Alert } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { Block } from "galio-framework";
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -14,17 +13,18 @@ import * as TokenActions from "../../storage/actions/token";
 
 import styles from './styles'
 
-function Servicos({ room, token, emptyToken }) {
+import { verifyCheckout } from '../../services/register';
+
+function Servicos({ navigation, room, token, emptyToken }) {
 
 	const [servicos, setServicos] = useState([]);
 	const [refreshing, setRefreshing] = useState(false);
 	const [spinner, setSpinner] = useState(false)
-	const { navigate } = useNavigation();
 
 	function load() {
 		setRefreshing(true)
 		api
-			.get("servico")
+			.get("app/servico")
 			.then((result) => {
 				setServicos(result.data.data);
 				setRefreshing(false)
@@ -48,7 +48,7 @@ function Servicos({ room, token, emptyToken }) {
 		if ((!room.number) || (dateCheckout <= Date.now()))
 		{
 			emptyToken();
-			navigate("Onboarding");
+			navigation.navigate("Onboarding");
 		} else
 		{
 			Alert.alert(
@@ -63,7 +63,7 @@ function Servicos({ room, token, emptyToken }) {
 						text: "OK",
 						onPress: () => {
 							setSpinner(true)
-							api.post('solicitacao', { servico: id, solicitante: room.number }, { headers: { Authorization: `Barer ${token.value}` } }).then((result) => {
+							api.post('app/solicitacao', { servico: id, solicitante: room.number }, { headers: { Authorization: `Barer ${token.value}` } }).then((result) => {
 								Alert.alert('Serviço solicitado com sucesso!', '', [
 									{ text: "Ok", onPress: () => setSpinner(false) }
 								]);
@@ -82,6 +82,7 @@ function Servicos({ room, token, emptyToken }) {
 
 	useEffect(() => {
 		load()
+		verifyCheckout(navigation, room)
 	}, []);
 
 	const onRefresh = React.useCallback(() => {
@@ -99,7 +100,7 @@ function Servicos({ room, token, emptyToken }) {
 				<Header
 					title="SERVIÇOS"
 					logout={true}
-					navigation={useNavigation}
+					navigation={navigation}
 					bgColor="#F4AE00"
 					titleColor="white"
 					iconColor="white"

@@ -10,7 +10,9 @@ import ExperienciaModal from './modal'
 
 import { connect } from "react-redux";
 
-function Experiencia({ navigate, room }) {
+import { verifyCheckout } from '../../services/register';
+
+function Experiencia({ navigation, room }) {
 
 	const [refreshing, setRefreshing] = useState(false);
 	const [experiencias, setExperiencias] = useState([]);
@@ -19,28 +21,25 @@ function Experiencia({ navigate, room }) {
 
 	function load(setRefreshingValue = true) {
 		setRefreshing(setRefreshingValue)
-		api
-			.get(`experiencia?limit=${room.chkt}`)
+		api.get(`app/experiencia?limit=${room.chkt}`)
 			.then((result) => {
 				setExperiencias(result.data.data);
 				setRefreshing(false)
 			})
 			.catch((err) => {
 				Alert.alert(
-					null,
+					'Ops',
 					'Não conseguimos contato com os servidores, tente novamente em alguns minutos',
-					[
-						{
-							text: "OK",
-							onPress: () => { setRefreshing(false) }
-						}
-					]
+					[{ text: "OK", onPress: () => { setRefreshing(false) } }]
 				);
 			});
 	}
 
 	useEffect(() => {
-		load(false)
+		load();
+		(async () => {
+			await verifyCheckout(room, navigation);
+		})();
 	}, []);
 
 	const onRefresh = React.useCallback(() => {
@@ -59,7 +58,7 @@ function Experiencia({ navigate, room }) {
 					<Header
 						title="EXPERIÊNCIA"
 						logout={true}
-						navigation={navigate}
+						navigation={navigation}
 						bgColor="#F4AE00"
 						titleColor="white"
 						iconColor="white"

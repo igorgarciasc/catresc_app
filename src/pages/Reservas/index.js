@@ -10,7 +10,9 @@ import styles from './styles'
 
 import { connect } from "react-redux";
 
-function Reservas({ navigate, room }) {
+import { verifyCheckout } from '../../services/register';
+
+function Reservas({ navigation, room }) {
 
     const [refreshing, setRefreshing] = useState(false);
     const [reservas, setReservas] = useState([]);
@@ -18,7 +20,7 @@ function Reservas({ navigate, room }) {
 
     function load(setRefreshingValue = true) {
         setRefreshing(setRefreshingValue)
-        api.get(`reservas?limit=${room.number}`).then(result => {
+        api.get(`app/reservas?limit=${room.number}`).then(result => {
             setRefreshing(false)
             setReservas(result.data.data);
         }).catch(err => {
@@ -29,7 +31,8 @@ function Reservas({ navigate, room }) {
     }
 
     useEffect(() => {
-        load(false)
+        load()
+        verifyCheckout(room, navigation)
     }, []);
 
     const onRefresh = React.useCallback(() => {
@@ -49,7 +52,7 @@ function Reservas({ navigate, room }) {
                     text: "OK",
                     onPress: () => {
                         setSpinner(true)
-                        api.post(`reservas/cancel`, { id, room: room.number }).then(result => {
+                        api.post(`app/reservas/cancel`, { id, room: room.number }).then(result => {
                             setSpinner(false)
                             setReservas(result.data.data);
                         }).catch(err => {
@@ -75,7 +78,7 @@ function Reservas({ navigate, room }) {
                     <Header
                         title="EXPERIÊNCIA"
                         logout={true}
-                        navigation={navigate}
+                        navigation={navigation}
                         bgColor="#F4AE00"
                         titleColor="white"
                         iconColor="white"

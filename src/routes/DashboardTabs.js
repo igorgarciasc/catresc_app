@@ -1,20 +1,16 @@
 import React, { useState } from "react";
-import { useFocusEffect } from '@react-navigation/native'
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import Programacao from "../pages/Programacao";
 import Mapa from "../pages/Mapa";
-import Experiencia from "../pages/Experiencia";
 import ExperienciaTabs from "../routes/ExperienciaTabs"
 import Servicos from "../pages/Servicos";
 
 import { connect } from "react-redux";
-
+import { Platform } from 'react-native';
 import nowTheme from '../constants/Theme';
-
-import { getData } from "../services/storage";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -27,8 +23,8 @@ function DashboardTabs({ token }) {
 				style: {
 					elevation: 0,
 					shadowOpacity: 0,
-					marginBottom: -29,
-					height: 100
+					height: (Platform.OS === 'ios') ? 100 : 50,
+					marginBottom: (Platform.OS === 'ios') ? -30 : 0,
 				},
 				tabStyle: {
 					flexDirection: "column",
@@ -40,7 +36,7 @@ function DashboardTabs({ token }) {
 					flex: 0,
 					width: 40,
 					height: 40,
-					marginTop: 0
+					marginTop: (Platform.OS === 'ios') ? 5 : 10,
 				},
 				labelStyle: {
 					fontSize: 13,

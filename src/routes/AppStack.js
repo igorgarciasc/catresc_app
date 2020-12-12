@@ -16,7 +16,6 @@ function AppStack() {
 			<Navigator screenOptions={{ headerShown: false }}>
 				<Screen name="Onboarding" component={Onboarding} />
 				<Screen name="Pulseira" component={Pulseira} />
-				<Screen name="Digitar" component={Digitar} />
 				<Screen name="DashboardTabs" component={DashboardTabs} />
 			</Navigator>
 		</NavigationContainer>

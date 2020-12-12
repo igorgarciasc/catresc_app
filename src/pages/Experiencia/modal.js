@@ -33,7 +33,7 @@ function ExperienciaModal({ show, setShow, expirence, room, token, onSuccess }) 
                         const expe = expirence.id;
                         const quarto = room.number;
                         setSpinner(true)
-                        api.post('agendar', { dia, hora, expe, quarto }, { headers: { Authorization: `Barer ${token.value}` } }).then((result) => {
+                        api.post('app/agendar', { dia, hora, expe, quarto }, { headers: { Authorization: `Barer ${token.value}` } }).then((result) => {
                             Alert.alert(
                                 'Concluído',
                                 'Agendamento realizado com sucesso!',

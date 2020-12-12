@@ -18,7 +18,7 @@ function Mapa() {
 
 	useEffect(() => {
 		api
-			.get("map")
+			.get("app/map")
 			.then((result) => {
 				setPoints(result.data.data);
 			})
@@ -61,7 +61,6 @@ function Mapa() {
 						longitudeDelta: 0.002,
 					}}
 				>
-
 					{
 						points.map(point => (
 							<Marker key={point.id} icon={mapMarker} coordinate={{ latitude: Number(point.latitude), longitude: Number(point.longitude) }} calloutAnchor={{ x: 2.5, y: 0.25 }}>
@@ -91,7 +90,6 @@ function Mapa() {
 							</Marker>
 						))
 					}
-
 				</MapView>
 			</Block>
 		</Block>

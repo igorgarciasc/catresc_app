@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Image } from 'react-native';
 import { AppLoading } from "expo";
@@ -7,8 +7,7 @@ import { Asset } from 'expo-asset';
 import { Images } from './src/constants';
 
 import { Provider } from 'react-redux';
-import { store, persistor } from './src/storage/index'
-import { PersistGate } from 'redux-persist/integration/react'
+import store from './src/storage'
 
 import AppStack from "./src/routes/AppStack";
 
@@ -69,10 +68,8 @@ function App() {
 	{
 		return (
 			<Provider store={store}>
-				<PersistGate loading={null} persistor={persistor}>
-					<AppStack />
-					<StatusBar style="light" />
-				</PersistGate>
+				<AppStack />
+				<StatusBar style="light" />
 			</Provider>);
 	}
 

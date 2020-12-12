@@ -1,6 +1,6 @@
 {
 	"expo": {
-		"name": "AppCatre",
+		"name": "Catre/SC",
 		"slug": "appcatre",
 		"version": "1.0.0",
 		"orientation": "portrait",
@@ -22,6 +22,11 @@
 				}
 			}
 		},
+		"notification": { 
+			"icon": "./assets/notifications.png",
+			"color":"#F4AE00",
+         	"androidMode":"default"
+		}, 
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
 			"supportsTablet": true,

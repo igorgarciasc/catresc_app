@@ -12,6 +12,7 @@
     "@expo-google-fonts/indie-flower": "^0.1.0",
     "@expo-google-fonts/lato": "^0.1.0",
     "@expo-google-fonts/poppins": "^0.1.0",
+    "@react-native-async-storage/async-storage": "^1.13.2",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/netinfo": "^5.9.7",

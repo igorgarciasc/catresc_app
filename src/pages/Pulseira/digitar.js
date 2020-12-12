@@ -7,6 +7,7 @@ import Input from '../../components/Input'
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import api from '../../services/api'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -22,42 +23,43 @@ function Digitar({ setToken, setRoom, navigation }) {
 
 	const onHandlerSubmit = async ({ type, data }) => {
 		setSpinner(true);
-		if (inputCode)
-		{
-			api.post('register', { cod: inputCode }).then(result => {
-				setSpinner(false);
-				if (result.data.data.status)
+		api.post('app/register', { cod: inputCode }).then(async (result) => {
+
+			const informacoesUsuario = result.data.data
+
+			if (!!informacoesUsuario.status)
+			{
+				try
 				{
 					Vibration.vibrate();
-					setToken(result.data.data.token);
-					setRoom(result.data.data.room, result.data.data.chkt)
+					setToken(informacoesUsuario.token);
+					await AsyncStorage.setItem('@appcatreToken', informacoesUsuario.token);
+					setRoom(informacoesUsuario.room, informacoesUsuario.chkt)
+					await AsyncStorage.setItem('@appcatreRoom', JSON.stringify({ number: informacoesUsuario.room, chkt: informacoesUsuario.chkt }));
+					setSpinner(false);
 					navigation.navigate('DashboardTabs');
-				}
-				else
+				} catch (err)
 				{
-					Alert.alert(
-						'Ops',
-						'Parece que você não está hospedado',
-						[
-							{ text: 'Tentar novamente', style: 'cancel', onPress: () => { setSpinner(false); } },
-							{ text: 'Ok', onPress: () => { setSpinner(false); navigate('DashboardTabs'); } }
-						]
-					)
+					console.log(err)
 				}
-			}).catch(err => {
+			}
+			else
+			{
 				Alert.alert(
 					'Ops',
-					'Aconteceu alguma coisa estranha. Tente novamente.',
-					[
-						{
-							text: 'Ok', onPress: () => {
-								setSpinner(false);
-							}
-						}
-					]
+					'Parece que você não está hospedado',
+					[{ text: 'Tentar novamente', style: 'cancel', onPress: () => { setSpinner(false); } },
+					{ text: 'Ok', onPress: () => { setSpinner(false); navigation.navigate('DashboardTabs'); } }]
 				)
-			});
-		}
+			}
+
+		}).catch(err => {
+			Alert.alert(
+				'Ops',
+				'Aconteceu alguma coisa estranha. Tente novamente.',
+				[{ text: 'Ok', onPress: () => { setSpinner(false); } }]
+			)
+		});
 	};
 
 	return (

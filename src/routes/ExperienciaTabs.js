@@ -4,6 +4,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Reservas from "../pages/Reservas";
 import Experiencia from "../pages/Experiencia";
 
+import { Platform } from 'react-native';
+
 import nowTheme from '../constants/Theme';
 
 const { Navigator, Screen } = createBottomTabNavigator();
@@ -14,10 +16,7 @@ function ExperienciaTabs({ token }) {
         <Navigator
             tabBarOptions={{
                 style: {
-                    elevation: 0,
-                    shadowOpacity: 0,
-                    marginBottom: -30,
-                    height: 80
+                    marginBottom: (Platform.OS === 'ios') ? -30 : 0,
                 },
                 tabStyle: {
                     flexDirection: "column",
