@@ -43,6 +43,18 @@ function Servicos({ navigation, room, token, emptyToken }) {
 			});
 	}
 
+	useEffect(() => {
+		load()
+		verifyCheckout(navigation, room)
+		navigation.addListener('focus', () => {
+			load();
+		});
+	}, []);
+
+	const onRefresh = React.useCallback(() => {
+		load()
+	}, []);
+
 	function handleClickService(id) {
 		const dateCheckout = new Date(room.chkt);
 		if ((!room.number) || (dateCheckout <= Date.now()))
@@ -79,15 +91,6 @@ function Servicos({ navigation, room, token, emptyToken }) {
 			);
 		}
 	}
-
-	useEffect(() => {
-		load()
-		verifyCheckout(navigation, room)
-	}, []);
-
-	const onRefresh = React.useCallback(() => {
-		load()
-	}, []);
 
 	return (
 		<Block flex style={{ flexDirection: 'column' }}>

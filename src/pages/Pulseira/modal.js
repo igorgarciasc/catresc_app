@@ -20,23 +20,27 @@ function DigitarModal({ show, setShow, onProcess }) {
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-
-
                     <Block fluid style={{ width: '100%', marginBottom: 10 }}>
                         <Input
                             center
                             placeholder="Digite o código de sua pulseira"
-                            type='numeric'
+                            type='number-pad'
+                            returnKeyType='done'
+                            returnKeyLabel='Pronto'
+                            enablesReturnKeyAutomatically={true}
                             value={inputCode}
                             onChangeText={(value) => setInpuCode(value)}
-                            style={{ height: 60 }}
+                            style={{ height: 60, fontSize: 50 }}
                         />
                     </Block>
 
                     <Button
                         shadowless
-                        style={{ marginBottom: 4, width: '100%', backgroundColor: '#42929d' }}
-                        onPress={() => onProcess({ data: inputCode })}
+                        style={{ marginBottom: 4, width: '100%', backgroundColor: inputCode ? '#6DBE98' : '#cccccc' }}
+                        onPress={() => {
+                            setShow(!show)
+                            onProcess({ data: inputCode })
+                        }}
                         disabled={inputCode ? false : true}
                     >
                         <Text
@@ -78,7 +82,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.7)',
     },
     modalView: {
-        backgroundColor: '#FFB236',
+        backgroundColor: '#42929D',
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         minHeight: 260,
@@ -88,7 +92,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     textStyle: {
-        color: 'white',
+        color: 'black',
         fontWeight: 'bold',
         textAlign: 'center',
     },

@@ -37,21 +37,22 @@ function Pulseira({ navigation, token, room, setToken, setRoom }) {
 	}, []);
 
 	const handleBarCodeScanned = ({ type, data }) => {
-		setShowModal(false);
-
 		api.post('app/register', { cod: data }).then(async (result) => {
+			setSpinner(true);
 			const informacoesUsuario = result.data.data;
-			setSpinner(false);
 			if (!!informacoesUsuario.status)
 			{
 				try
 				{
+					setSpinner(false);
+					setSpinner(false);
 					Vibration.vibrate(200);
 					setToken(informacoesUsuario.token);
 					await AsyncStorage.setItem('@appcatreToken', informacoesUsuario.token);
 					setRoom(informacoesUsuario.room, informacoesUsuario.chkt)
 					await AsyncStorage.setItem('@appcatreRoom', JSON.stringify({ number: informacoesUsuario.room, chkt: informacoesUsuario.chkt }));
 					navigation.navigate('DashboardTabs');
+					setSpinner(false);
 				} catch (err)
 				{
 					console.log(err)
@@ -68,6 +69,7 @@ function Pulseira({ navigation, token, room, setToken, setRoom }) {
 					]
 				)
 			}
+			setSpinner(false);
 		}).catch(err => {
 			Alert.alert(
 				'Ops',
@@ -85,23 +87,25 @@ function Pulseira({ navigation, token, room, setToken, setRoom }) {
 
 	if (hasPermission === null)
 	{
-		return (<>
-			<Header
-				title="IDENTIFICAÇÃO"
-				navigation={navigation}
-				bgColor="#F4AE00"
-				logout={false}
-				titleColor="white"
-				iconColor="white"
-				white={true}
-			/>
-			<Text style={{ fontFamily: 'montserrat-regular', marginTop: 30 }} center muted>
-				Estamos aguardando sua permissão :)
+		return (
+			<Block style={{ backgroundColor: '#000000' }}>
+				<Header
+					title="IDENTIFICAÇÃO"
+					navigation={navigation}
+					bgColor="#F4AE00"
+					logout={false}
+					titleColor="white"
+					iconColor="white"
+					white={true}
+				/>
+				<Text style={{ fontFamily: 'montserrat-regular', marginTop: 30 }} center muted>
+					Estamos aguardando sua permissão :)
 			</Text>
-			<Block center style={{ marginTop: 550 }} >
-				<Button color="#F4AE00" shadowless size='large' onPress={() => setShowModal(!showModal)}>Prefiro Digitar</Button>
+				<Block center style={{ marginTop: 550 }} >
+					<Button color="#F4AE00" shadowless size='large' onPress={() => setShowModal(!showModal)}>Prefiro Digitar</Button>
+				</Block>
 			</Block>
-		</>)
+		)
 	}
 	else if (hasPermission === false)
 	{
@@ -129,10 +133,10 @@ function Pulseira({ navigation, token, room, setToken, setRoom }) {
 				<View style={{ flex: 1 }}>
 					{!scanned && <Camera onBarCodeScanned={handleBarCodeScanned}
 						style={StyleSheet.absoluteFillObject} ratio='16:9'>
-						<BarcodeMask width={350} height={100} edgeColor={nowTheme.COLORS.DEFAULT} showAnimatedLine={false} />
+						<BarcodeMask width={350} height={100} style={{ marginTop: 100 }} edgeColor={nowTheme.COLORS.DEFAULT} showAnimatedLine={false} />
 					</Camera >}
-					<Block center style={{ marginTop: 550 }} >
-						<Button color="#F4AE00" shadowless size='large' onPress={() => setShowModal(!showModal)}>Prefiro Digitar</Button>
+					<Block center style={{ position: 'absolute', bottom: 60 }} >
+						<Button color="#F4AE00" style={{ width: 250 }} shadowless size='large' onPress={() => setShowModal(!showModal)}>Prefiro Digitar</Button>
 					</Block>
 				</View >
 				<Modal show={showModal} setShow={setShowModal} onProcess={handleBarCodeScanned} />

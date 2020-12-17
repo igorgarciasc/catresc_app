@@ -1,23 +1,20 @@
 import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import Reservas from "../pages/Reservas";
 import Experiencia from "../pages/Experiencia";
 
-import { Platform } from 'react-native';
-
 import nowTheme from '../constants/Theme';
 
-const { Navigator, Screen } = createBottomTabNavigator();
+const { Navigator, Screen } = createMaterialTopTabNavigator();
 
 function ExperienciaTabs({ token }) {
 
     return (
         <Navigator
+            tabBarPosition="bottom"
             tabBarOptions={{
-                style: {
-                    marginBottom: (Platform.OS === 'ios') ? -30 : 0,
-                },
+                tabBarPosition: "bottom",
                 tabStyle: {
                     flexDirection: "column",
                     alignItems: "center",
@@ -28,12 +25,13 @@ function ExperienciaTabs({ token }) {
                     fontSize: 16,
                 },
                 inactiveBackgroundColor: nowTheme.COLORS.BORDER_COLOR,
-                activeBackgroundColor: "#ccc",
+                indicatorStyle: {
+                    backgroundColor: nowTheme.COLORS.PRIMARY
+                },
                 inactiveTintColor: nowTheme.COLORS.DEFAULT,
-                activeTintColor: nowTheme.COLORS.PRIMARY,
+                activeTintColor: nowTheme.COLORS.PRIMARY
             }}
         >
-
             <Screen
                 name="Experiencias"
                 options={{

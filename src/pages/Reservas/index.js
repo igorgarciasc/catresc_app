@@ -6,13 +6,15 @@ import api from '../../services/api'
 import Spinner from 'react-native-loading-spinner-overlay';
 import Body from './body'
 
+import moment from 'moment-timezone'
+
 import styles from './styles'
 
 import { connect } from "react-redux";
 
 import { verifyCheckout } from '../../services/register';
 
-function Reservas({ navigation, room }) {
+function Reservas({ navigation, room, token }) {
 
     const [refreshing, setRefreshing] = useState(false);
     const [reservas, setReservas] = useState([]);
@@ -33,6 +35,9 @@ function Reservas({ navigation, room }) {
     useEffect(() => {
         load()
         verifyCheckout(room, navigation)
+        navigation.addListener('focus', () => {
+            load();
+        });
     }, []);
 
     const onRefresh = React.useCallback(() => {
@@ -52,11 +57,16 @@ function Reservas({ navigation, room }) {
                     text: "OK",
                     onPress: () => {
                         setSpinner(true)
-                        api.post(`app/reservas/cancel`, { id, room: room.number }).then(result => {
+                        api.post(`app/cancel/reservas`, { id, room: room.number }, { headers: { Authorization: `Barer ${token.value}` } }).then(result => {
                             setSpinner(false)
                             setReservas(result.data.data);
                         }).catch(err => {
-                            Alert.alert('Ops, não conseguimos enviar sua solicitação, tente novamente em alguns minutos!', '', [
+                            let errorText = 'Ops, aconteceu algum problema. Tente novamente'
+                            if (err.response.data.data)
+                            {
+                                errorText = err.response.data.data
+                            }
+                            Alert.alert(errorText, '', [
                                 { text: "Ok", onPress: () => setSpinner(false) }
                             ]);
                         })
@@ -76,7 +86,7 @@ function Reservas({ navigation, room }) {
             <Block flex style={{ flexDirection: 'column' }}>
                 <Block>
                     <Header
-                        title="EXPERIÊNCIA"
+                        title="MINHAS RESERVAS"
                         logout={true}
                         navigation={navigation}
                         bgColor="#F4AE00"
@@ -97,6 +107,7 @@ function Reservas({ navigation, room }) {
 
 const mapStateToProps = (state) => ({
     room: state.room,
+    token: state.token
 });
 
 export default connect(mapStateToProps, null)(Reservas)

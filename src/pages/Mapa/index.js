@@ -12,11 +12,11 @@ import styles from "./styles";
 
 import mapMarker from '../../../assets/imgs/map-icon.png'
 
-function Mapa() {
+function Mapa({ navigation }) {
 
 	const [points, setPoints] = useState([])
 
-	useEffect(() => {
+	function load() {
 		api
 			.get("app/map")
 			.then((result) => {
@@ -33,6 +33,13 @@ function Mapa() {
 					]
 				);
 			});
+	}
+
+	useEffect(() => {
+		load()
+		navigation.addListener('focus', () => {
+			load();
+		});
 	}, [])
 
 	return (

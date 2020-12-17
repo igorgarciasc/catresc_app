@@ -5,6 +5,8 @@ import Header from '../../components/Header'
 import styles from './styles'
 import Card from '../../components/NewCard'
 
+import { useFocusEffect } from '@react-navigation/native'
+
 import api from '../../services/api'
 import ExperienciaModal from './modal'
 
@@ -40,6 +42,9 @@ function Experiencia({ navigation, room }) {
 		(async () => {
 			await verifyCheckout(room, navigation);
 		})();
+		navigation.addListener('focus', () => {
+			load();
+		});
 	}, []);
 
 	const onRefresh = React.useCallback(() => {
@@ -52,28 +57,26 @@ function Experiencia({ navigation, room }) {
 	}
 
 	return (
-		<>
-			<Block flex style={{ flexDirection: 'column' }}>
-				<Block >
-					<Header
-						title="EXPERIÊNCIA"
-						logout={true}
-						navigation={navigation}
-						bgColor="#F4AE00"
-						titleColor="white"
-						iconColor="white"
-						white={true}
-					/>
-				</Block>
-				<Block flex>
-					<ScrollView showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-						<Block style={styles.container}>
-							{
-								experiencias.map(experiencia => <Card key={experiencia.id} item={{ title: experiencia.nome, subtitle: experiencia.profissional, image: experiencia.image, body: experiencia.descricao, cta: 'Clique para solicitar' }} horizontal onClick={() => handleClickExperiencia(experiencia.id)} />)
-							}
-						</Block>
-					</ScrollView>
-				</Block>
+		<Block flex style={{ flexDirection: 'column' }}>
+			<Block >
+				<Header
+					title="EXPERIÊNCIA"
+					logout={true}
+					navigation={navigation}
+					bgColor="#F4AE00"
+					titleColor="white"
+					iconColor="white"
+					white={true}
+				/>
+			</Block>
+			<Block flex>
+				<ScrollView showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+					<Block style={styles.container}>
+						{
+							experiencias.map(experiencia => <Card key={experiencia.id} item={{ title: experiencia.nome, subtitle: `${experiencia.duracao} minutos`, image: experiencia.image, body: experiencia.descricao, cta: 'Clique para agendar', valor: experiencia.valor }} horizontal onClick={() => handleClickExperiencia(experiencia.id)} />)
+						}
+					</Block>
+				</ScrollView>
 			</Block>
 			<ExperienciaModal
 				show={showModal}
@@ -82,7 +85,7 @@ function Experiencia({ navigation, room }) {
 				room={room}
 				onSuccess={() => load(false)}
 			/>
-		</>
+		</Block>
 	);
 }
 

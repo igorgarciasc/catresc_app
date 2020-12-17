@@ -69,7 +69,7 @@ function App() {
 		return (
 			<Provider store={store}>
 				<AppStack />
-				<StatusBar style="light" />
+				<StatusBar style="light" backgroundColor="#F4AE00" />
 			</Provider>);
 	}
 

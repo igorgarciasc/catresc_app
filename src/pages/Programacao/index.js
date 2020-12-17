@@ -51,6 +51,9 @@ function Programacao({ navigation, room, token }) {
 	useEffect(() => {
 		load();
 		registerForPushNotifications(room);
+		navigation.addListener('focus', () => {
+			load();
+		});
 	}, []);
 
 	const onRefresh = React.useCallback(() => {

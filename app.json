@@ -3,7 +3,8 @@
 		"name": "Catre/SC",
 		"slug": "appcatre",
 		"version": "1.0.0",
-		"orientation": "portrait",
+		"userInterfaceStyle": "light",
+		"orientation": "default",
 		"icon": "./assets/icon.png",
 		"splash": {
 			"image": "./assets/splash.png",
@@ -15,6 +16,7 @@
 		},
 		"android": {
 			"useNextNotificationsApi": true,
+			"userInterfaceStyle": "light",
 			"package": "com.figapp.appcatre",
 			"config":{
 				"googleMaps":{
@@ -30,7 +32,8 @@
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
 			"supportsTablet": true,
-			"bundleIdentifier": "com.figapp.appcatre"
+			"bundleIdentifier": "com.igorgarcia.appcatre",
+			"userInterfaceStyle": "light"
 		}
 	}
 }

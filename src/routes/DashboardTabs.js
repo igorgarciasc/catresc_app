@@ -7,6 +7,7 @@ import Programacao from "../pages/Programacao";
 import Mapa from "../pages/Mapa";
 import ExperienciaTabs from "../routes/ExperienciaTabs"
 import Servicos from "../pages/Servicos";
+import Notificacoes from "../pages/Notificacoes"
 
 import { connect } from "react-redux";
 import { Platform } from 'react-native';
@@ -23,7 +24,7 @@ function DashboardTabs({ token }) {
 				style: {
 					elevation: 0,
 					shadowOpacity: 0,
-					height: (Platform.OS === 'ios') ? 100 : 50,
+					height: (Platform.OS === 'ios') ? 85 : 50,
 					marginBottom: (Platform.OS === 'ios') ? -30 : 0,
 				},
 				tabStyle: {
@@ -36,7 +37,7 @@ function DashboardTabs({ token }) {
 					flex: 0,
 					width: 40,
 					height: 40,
-					marginTop: (Platform.OS === 'ios') ? 5 : 10,
+					marginTop: (Platform.OS === 'ios') ? 0 : 10,
 				},
 				labelStyle: {
 					fontSize: 13,

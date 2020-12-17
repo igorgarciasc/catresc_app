@@ -6,7 +6,7 @@ import { Block, Text, theme } from 'galio-framework';
 
 import { nowTheme } from '../../constants';
 
-class Card extends React.Component {
+class CardNotification extends React.Component {
   render() {
     const {
       navigation,
@@ -33,11 +33,6 @@ class Card extends React.Component {
     return (
       <Block row={horizontal} card flex style={cardContainer}>
         <TouchableWithoutFeedback onPress={onClick}>
-          <Block flex style={imgContainer}>
-            <Image resizeMode="cover" source={{ uri: item.image, }} style={{ height: '100%' }} />
-          </Block>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback onPress={onClick}>
           <Block flex space="between" style={styles.cardDescription}>
             <Block flex>
               <Text
@@ -48,45 +43,6 @@ class Card extends React.Component {
               >
                 {item.title}
               </Text>
-              {item.subtitle ? (
-                <Block flex>
-                  <Text
-                    style={{ fontFamily: 'montserrat-regular', fontStyle: 'italic', marginTop: -15 }}
-                    size={10}
-                    color='#F4AE00'
-                  >
-                    {item.subtitle}
-                  </Text>
-                </Block>
-              ) : (
-                  <Block />
-                )}
-              {item.valor ? (
-                <Block flex>
-                  <Text
-                    style={{ fontFamily: 'montserrat-regular', fontStyle: 'italic' }}
-                    size={10}
-                    color='#ccc'
-                  >
-                    R$ {item.valor}
-                  </Text>
-                </Block>
-              ) : (
-                  <Block />
-                )}
-              {item.cancelText ? (
-                <Block flex>
-                  <Text
-                    style={{ fontFamily: 'montserrat-regular', fontStyle: 'italic' }}
-                    size={10}
-                    color='#ccc'
-                  >
-                    {item.cancelText}
-                  </Text>
-                </Block>
-              ) : (
-                  <Block />
-                )}
               {item.description ? (
                 <Block flex center>
                   <Text
@@ -95,19 +51,6 @@ class Card extends React.Component {
                     color={"#9A9A9A"}
                   >
                     {item.description}
-                  </Text>
-                </Block>
-              ) : (
-                  <Block />
-                )}
-              {item.body ? (
-                <Block flex left>
-                  <Text
-                    style={{ fontFamily: 'montserrat-regular', marginTop: 20 }}
-                    size={12}
-                    color={nowTheme.COLORS.TEXT}
-                  >
-                    {item.body}
                   </Text>
                 </Block>
               ) : (
@@ -131,17 +74,6 @@ class Card extends React.Component {
     );
   }
 }
-
-Card.propTypes = {
-  item: PropTypes.object,
-  horizontal: PropTypes.bool,
-  full: PropTypes.bool,
-  ctaColor: PropTypes.string,
-  imageStyle: PropTypes.any,
-  ctaRight: PropTypes.bool,
-  titleStyle: PropTypes.any,
-  textBodyStyle: PropTypes.any
-};
 
 const styles = StyleSheet.create({
   card: {
@@ -196,4 +128,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default withNavigation(Card);
+export default withNavigation(CardNotification);
