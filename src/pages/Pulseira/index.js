@@ -3,7 +3,7 @@ import { StyleSheet, View, Alert, Vibration } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import BarcodeMask from 'react-native-barcode-mask';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { Block, Button, Text } from "galio-framework";
+import { Block, Button } from "galio-framework";
 
 import { Camera } from 'expo-camera';
 
@@ -37,8 +37,9 @@ function Pulseira({ navigation, token, room, setToken, setRoom }) {
 	}, []);
 
 	const handleBarCodeScanned = ({ type, data }) => {
+		setScanned(true)
+		setSpinner(true);
 		api.post('app/register', { cod: data }).then(async (result) => {
-			setSpinner(true);
 			const informacoesUsuario = result.data.data;
 			if (!!informacoesUsuario.status)
 			{
@@ -88,7 +89,12 @@ function Pulseira({ navigation, token, room, setToken, setRoom }) {
 	if (hasPermission === null)
 	{
 		return (
-			<Block style={{ backgroundColor: '#000000' }}>
+			<>
+				<Spinner
+					visible={spinner}
+					textContent={'Solicitando...'}
+					textStyle={{ color: '#FFF' }}
+				/>
 				<Header
 					title="IDENTIFICAÇÃO"
 					navigation={navigation}
@@ -97,19 +103,44 @@ function Pulseira({ navigation, token, room, setToken, setRoom }) {
 					titleColor="white"
 					iconColor="white"
 					white={true}
+
 				/>
-				<Text style={{ fontFamily: 'montserrat-regular', marginTop: 30 }} center muted>
-					Estamos aguardando sua permissão :)
-			</Text>
-				<Block center style={{ marginTop: 550 }} >
-					<Button color="#F4AE00" shadowless size='large' onPress={() => setShowModal(!showModal)}>Prefiro Digitar</Button>
-				</Block>
-			</Block>
+				<View style={{ flex: 1, backgroundColor: '#000000' }}>
+					<Block center style={{ position: 'absolute', bottom: 60 }} >
+						<Button color="#F4AE00" style={{ width: 250 }} shadowless size='large' onPress={() => setShowModal(!showModal)}>Prefiro Digitar</Button>
+					</Block>
+				</View >
+				<Modal show={showModal} setShow={setShowModal} onProcess={handleBarCodeScanned} />
+			</>
 		)
 	}
 	else if (hasPermission === false)
 	{
-		navigation.navigate('Digitar')
+		return (
+			<>
+				<Spinner
+					visible={spinner}
+					textContent={'Solicitando...'}
+					textStyle={{ color: '#FFF' }}
+				/>
+				<Header
+					title="IDENTIFICAÇÃO"
+					navigation={navigation}
+					bgColor="#F4AE00"
+					logout={false}
+					titleColor="white"
+					iconColor="white"
+					white={true}
+
+				/>
+				<View style={{ flex: 1, backgroundColor:'#000000' }}>
+					<Block center style={{ position: 'absolute', bottom: 60 }} >
+						<Button color="#F4AE00" style={{ width: 250 }} shadowless size='large' onPress={() => setShowModal(!showModal)}>{spinner ? 'Processando...' : 'Prefiro Digitar'}</Button>
+					</Block>
+				</View >
+				<Modal show={showModal} setShow={setShowModal} onProcess={handleBarCodeScanned} />
+			</>
+		)
 	}
 	else
 	{
@@ -130,13 +161,13 @@ function Pulseira({ navigation, token, room, setToken, setRoom }) {
 					white={true}
 
 				/>
-				<View style={{ flex: 1 }}>
+				<View style={{ flex: 1, backgroundColor: '#000000' }}>
 					{!scanned && <Camera onBarCodeScanned={handleBarCodeScanned}
 						style={StyleSheet.absoluteFillObject} ratio='16:9'>
 						<BarcodeMask width={350} height={100} style={{ marginTop: 100 }} edgeColor={nowTheme.COLORS.DEFAULT} showAnimatedLine={false} />
 					</Camera >}
 					<Block center style={{ position: 'absolute', bottom: 60 }} >
-						<Button color="#F4AE00" style={{ width: 250 }} shadowless size='large' onPress={() => setShowModal(!showModal)}>Prefiro Digitar</Button>
+						<Button color="#F4AE00" style={{ width: 250 }} shadowless size='large' onPress={() => setShowModal(!showModal)}>{spinner ? 'Processando...': 'Prefiro Digitar'}</Button>
 					</Block>
 				</View >
 				<Modal show={showModal} setShow={setShowModal} onProcess={handleBarCodeScanned} />

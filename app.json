@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "Catre/SC",
 		"slug": "appcatre",
-		"version": "1.0.0",
+		"version": "2.0.4",
 		"userInterfaceStyle": "light",
 		"orientation": "default",
 		"icon": "./assets/icon.png",
@@ -16,6 +16,7 @@
 		},
 		"android": {
 			"useNextNotificationsApi": true,
+			"versionCode": 5,
 			"userInterfaceStyle": "light",
 			"package": "com.figapp.appcatre",
 			"config":{
@@ -33,7 +34,14 @@
 		"ios": {
 			"supportsTablet": true,
 			"bundleIdentifier": "com.igorgarcia.appcatre",
-			"userInterfaceStyle": "light"
+			"userInterfaceStyle": "light",
+			"buildNumber": "2.0.5",
+			"config": {
+				"googleMapsApiKey": "AIzaSyBc0GdQ9eapeRg416NSKAyZIPTAiVbvMBU"
+			},
+			"infoPlist":{
+				"NSCameraUsageDescription":"Este aplicativo utiliza a câmera para ler código de barras em pulseiras de consumo hóspedes do hotel Catre/SC"
+			}
 		}
 	}
 }

@@ -30,7 +30,7 @@ function DigitarModal({ show, setShow, onProcess }) {
                             enablesReturnKeyAutomatically={true}
                             value={inputCode}
                             onChangeText={(value) => setInpuCode(value)}
-                            style={{ height: 60, fontSize: 50 }}
+                            style={{ height: 60, fontSize: 80 }}
                         />
                     </Block>
 

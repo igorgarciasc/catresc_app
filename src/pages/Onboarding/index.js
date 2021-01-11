@@ -69,7 +69,7 @@ function Onboarding({ navigation, setToken, setRoom }) {
 								width: 230
 							}}
 							color={nowTheme.COLORS.PRIMARY}
-							onPress={() => navigation.navigate("Pulseira")}
+							onPress={() => navigation.navigate("Instrucoes")}
 						>
 							<Text style={{ fontFamily: 'montserrat-bold', fontSize: 14 }} color={theme.COLORS.WHITE}>
 								Hóspede
